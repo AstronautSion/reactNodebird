@@ -1,0 +1,11 @@
+front/node_modules/
+front/.next/
+front/yarn-error.log
+front/yarn.lock
+front/package-lock.json
+
+back/node_modules/
+back/yarn-error.log
+back/yarn.lock
+back/package-lock.json
+

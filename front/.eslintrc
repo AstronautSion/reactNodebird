@@ -1,0 +1,25 @@
+{
+    "parse" : "babel-eslint",
+    "parserOptions": {
+        "ecmaVersion": 2018,
+        "sourceType": "module",
+        "ecmaFeatures": {
+            "Jsx": true
+        }
+    },
+    "env": {
+        "browser": true,
+        "node": true,
+        "es6": true
+    },
+    "extends": [
+        "airbnb"
+    ],
+    "plugins": [
+        "import",
+        "react-hooks"
+    ],
+    "rules": {
+        "no-underscore-dangle": "off"
+    }
+}
