@@ -1,5 +1,6 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
+const passport = require('passport');
 const db = require('../models');
 
 const router = express.Router();
@@ -38,7 +39,24 @@ router.post('/logout', (req, res) => {
 
 });
 router.post('/login', (req, res) => {
-
+    passport.authenticate('local', (err, user, info) => {
+        if(err){
+            console.error(err);
+            return next(err);
+        }
+        if(info){
+            return res.status(401).send(info.reason);
+        }
+        return req.login(user, (loginErr) => {
+            if(loginErr){
+                return next(loginErr);
+            }
+            //비밀번호 데이터 제외
+            const filtereUser = Object.assign({}, user);
+            delete filtereUser.password;
+            return res.json(user);
+        });
+    });
 });
 router.get('/:id/follow', (req, res) => {
 
