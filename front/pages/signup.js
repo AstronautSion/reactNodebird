@@ -36,14 +36,14 @@ const Signup = () =>{
         dispatch({
             type: SIGN_UP_REQUEST,
             data: {
-                id,
+                userId: id,
                 password,
                 nickname
             }
         });
 
         //Router.push('/');
-    }, [password, passwordCheck, term,id,nickname]);
+    }, [password, passwordCheck, term, id, nickname]);
    
     const onChangePasswordCheck = useCallback((e) => {
         setPasswordError(e.target.value !== password);

@@ -27,7 +27,7 @@ router.post('/', async(req, res) => {  //회원가입
         return res.status(200).json(newUser);
     } catch (error) {
         console.error(error);
-        return res.status(403).send(error);
+        return res.status(403).send(error)
         // return next(e);
     }
 });

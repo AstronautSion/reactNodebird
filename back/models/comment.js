@@ -1,7 +1,7 @@
 module.exports = (sequelize, DataTypes) => {
     const Comment = sequelize.define('Comment', {
-        content: {
-            type: DataTypes.TEXT,
+        name: {
+            type: DataTypes.STRING(20),
             allowNull: false, //필수
         },
     },{
@@ -13,6 +13,5 @@ module.exports = (sequelize, DataTypes) => {
         db.Comment.belongsTo(db.User);
         db.Comment.belongsTo(db.Post);
     };
-
     return Comment;
 };

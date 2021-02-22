@@ -1,4 +1,4 @@
-import {all, fork, put, takeLatest, delay } from 'redux-saga/effects';
+import {all, fork, put, takeLatest, delay, call } from 'redux-saga/effects';
 import axios from 'axios';
 
 import {
@@ -13,19 +13,11 @@ import {
     LOG_OUT_REQUEST
 } from '../reducers/user';
 
+/*******[ login ]**********/
 function loginAPI(){
     //서버에 요청을 보내는 부분
     return axios.post('/login');
 }
-function logoutAPI(){
-    return axios.post('/logout');
-}
-function signupAPI(){
-    //서버에 요청을 보내는 부분
-    return axios.post('/signUp');
-}
-
-
 function* login(){
     try{
         //yield call(loginAPI);
@@ -40,6 +32,14 @@ function* login(){
         });
     }
 }
+function* watchLogin(){
+    yield takeLatest(LOG_IN_REQUEST, login);
+}
+
+/*******[ logout ]**********/
+function logoutAPI(){
+    return axios.post('/logout');
+}
 function* logout(){
     try {
         yield delay(2000);
@@ -53,10 +53,18 @@ function* logout(){
         })
     }
 }
-function* signup(){
+function* watchLogout(){
+    yield takeLatest(LOG_OUT_REQUEST, logout);
+}
+
+/*******[ signup ]**********/
+function signupAPI(signUpData){
+    //서버에 요청을 보내는 부분
+    return axios.post('http://localhost:8088/api/user/', signUpData);
+}
+function* signup(action){
     try {
-        //yield call(signupAPI);
-        yield delay(2000);
+        yield call(signupAPI, action.data);
         yield put({
             type: SIGN_UP_SUCCESS
         });
@@ -67,17 +75,12 @@ function* signup(){
         });
     }
 }
-
-
-function* watchLogin(){
-    yield takeLatest(LOG_IN_REQUEST, login);
-}
-function* watchLogout(){
-    yield takeLatest(LOG_OUT_REQUEST, logout);
-}
 function* watchSignup(){
     yield takeLatest(SIGN_UP_REQUEST, signup);
 }
+
+
+
 
 export default function* userSaga(){
     yield all([
