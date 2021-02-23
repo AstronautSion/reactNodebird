@@ -5,12 +5,15 @@ import {
     LOG_IN_REQUEST,
     LOG_IN_SUCCESS, 
     LOG_IN_FAILURE, 
+    LOG_OUT_REQUEST,
+    LOG_OUT_SUCCESS, 
+    LOG_OUT_FAILURE, 
     SIGN_UP_REQUEST, 
     SIGN_UP_SUCCESS, 
     SIGN_UP_FAILURE, 
-    LOG_OUT_SUCCESS, 
-    LOG_OUT_FAILURE, 
-    LOG_OUT_REQUEST
+    LOAD_USER_REQUEST, 
+    LOAD_USER_SUCCESS, 
+    LOAD_USER_FAILURE, 
 } from '../reducers/user';
 axios.defaults.baseURL = 'http://localhost:8088/api';
 
@@ -42,11 +45,13 @@ function* watchLogin(){
 
 /*******[ logout ]**********/
 function logoutAPI(){
-    return axios.post('/logout/');
+    return axios.post('/user/logout', {} , {
+        withCredentials: true,
+    });
 }
 function* logout(){
     try {
-        yield delay(2000);
+        yield call(logoutAPI)
         yield put({
             type: LOG_OUT_SUCCESS
         })
@@ -64,7 +69,7 @@ function* watchLogout(){
 /*******[ signup ]**********/
 function signupAPI(data){
     //서버에 요청을 보내는 부분
-    return axios.post('/user/', data);
+    return axios.post('/user', data);
 }
 function* signup(action){
     try {
@@ -75,7 +80,8 @@ function* signup(action){
     } catch (error) {
         console.error(error);
         yield put({
-            type: SIGN_UP_FAILURE
+            type: SIGN_UP_FAILURE,
+            error: error.response.data,
         });
     }
 }
@@ -83,7 +89,30 @@ function* watchSignup(){
     yield takeLatest(SIGN_UP_REQUEST, signup);
 }
 
-
+/*******[ load user ]**********/
+function loadUserAPI(){
+    //서버에 요청을 보내는 부분
+    return axios.get('/user',{
+        withCredentials:true
+    });
+}
+function* loadUser(){
+    try {
+        const result = yield call(loadUserAPI);
+        yield put({
+            type: LOAD_USER_SUCCESS,
+            data: result.data,
+        });
+    } catch (error) {
+        console.error(error);
+        yield put({
+            type: LOAD_USER_FAILURE
+        });
+    }
+}
+function* watchLoadUser(){
+    yield takeLatest(LOAD_USER_REQUEST, loadUser);
+}
 
 
 export default function* userSaga(){
@@ -91,5 +120,6 @@ export default function* userSaga(){
         fork(watchLogin),
         fork(watchSignup),
         fork(watchLogout),
+        fork(watchLoadUser)
     ]);
 }

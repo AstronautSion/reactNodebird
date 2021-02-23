@@ -5,8 +5,36 @@ const db = require('../models');
 
 const router = express.Router();
 
-router.get('/', (req, res) => {  
-
+router.get('/', async (req, res) => {  
+    try {
+        if (req.user) {
+            const fullUser = await db.User.findOne({
+                where: { id: req.user.id },
+                attributes: {
+                    exclude: ['password']
+                },
+                include: [{
+                    model: db.Post,
+                    as: 'Posts',
+                    attributes: ['id']
+                },{
+                    model: db.User,
+                    as: 'Followings',
+                    attributes: ['id']
+                },{
+                    model: db.User,
+                    as: 'Followers',
+                    attributes: ['id']
+                }], 
+            })
+            res.status(200).json(fullUser);
+        } else {
+            res.status(200).json(null);
+        }
+    } catch (error) {
+        console.error(error);
+        next(error);
+    }
 });
 router.post('/', async(req, res) => {  //회원가입
     try {
@@ -24,11 +52,10 @@ router.post('/', async(req, res) => {  //회원가입
             userId: req.body.userId,
             password: hashedPassword,
         });
-        console.log(newUser);
-        return res.status(200).json(newUser);
+        res.status(201).send('ok');
     } catch (error) {
         console.error(error);
-        return res.status(403).send(error)
+        next(error)
         // return next(e);
     }
 });
@@ -36,13 +63,12 @@ router.get('/:id', (req, res) => { //남의 정보 가져오는 것.
 
 });
 router.post('/logout', (req, res) => {// POST /api/usr/logout
-
+    req.logout();
+    req.session.destroy();
+    res.send('ok');
 });
 router.post('/login', (req, res, next) => { // POST /api/usr/login
     passport.authenticate('local', (err, user, info) => {
-        console.log('err', err)
-        console.log('user', user)
-        console.log('info', info)
         if(err){
             console.error(err);
             return next(err);
@@ -50,14 +76,32 @@ router.post('/login', (req, res, next) => { // POST /api/usr/login
         if(info){
             return res.status(401).send(info.reason);
         }
-        return req.login(user, (loginErr) => {
+        return req.login(user, async (loginErr) => {
+            console.error(user)
             if(loginErr){
                 return next(loginErr);
             }
-            //비밀번호 데이터 제외
-            const filtereUser = Object.assign({}, user.toJSON());
-            delete filtereUser.password;
-            return res.json(filtereUser);
+            const fullUser = await db.User.findOne({
+                where: {id: user.id },
+                attributes: {
+                    exclude: ['password']
+                },
+                include: [{
+                    model: db.Post,
+                    as: 'Posts',
+                    attributes: ['id']
+                },{
+                    model: db.User,
+                    as: 'Followings',
+                    attributes: ['id']
+                },{
+                    model: db.User,
+                    as: 'Followers',
+                    attributes: ['id']
+                }], 
+            });
+            
+            return res.status(200).json(fullUser);
         });
     })(req, res, next);
 });

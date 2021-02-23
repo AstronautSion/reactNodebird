@@ -1,14 +1,22 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Link from 'next/link';
 import PropTypes from 'prop-types';
 import {Menu, Input, Button, Row, Col } from 'antd';
 import LoginForm from '../components/LoginForm';
 import UserProfile from './UserProfile';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { LOAD_USER_REQUEST } from '../reducers/user';
 
 const AppLayout = ({ children }) =>{
-    const { isLoggedIn } = useSelector(state => state.user);
-    
+    const { me } = useSelector(state => state.user);
+    const dispatch = useDispatch();
+    useEffect(()=>{
+        if(!me){
+            dispatch({
+                type: LOAD_USER_REQUEST,
+            })
+        }
+    },[])
     return(
         <div className="wrap">
             
@@ -19,10 +27,10 @@ const AppLayout = ({ children }) =>{
                     <Input.Search enterButton style={{ verticalAlign: 'middle' }}/>
                 </Menu.Item>
             </Menu>
-            { !isLoggedIn && <Link href="/signup"><a><Button>Sign up</Button></a></Link>}
+            { !me && <Link href="/signup"><a><Button>Sign up</Button></a></Link>}
             <Row gutter={10}>
                 <Col xs={24} md={6}>
-                    { isLoggedIn ? <UserProfile /> : <LoginForm /> }
+                    { me ? <UserProfile /> : <LoginForm /> }
                 </Col> 
                 
                 <Col xs={24} md={12}>

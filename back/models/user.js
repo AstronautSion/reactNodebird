@@ -14,16 +14,18 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false,
         },
     },{
+        modelName: 'User',
+      tableName: 'users',
         charset: 'utf8',
         collate: 'utf8_general_ci',
     });
 
     User.associate = (db) =>{
-        db.User.hasMany(db.Post, {as: 'Post'});
+        db.User.hasMany(db.Post);
         db.User.hasMany(db.Comment);
-        db.User.belongsToMany(db.Post, {through : 'Like', as: 'Liked'});
-        db.User.belongsToMany(db.User, {through : 'Follow', as: 'Followers'});
-        db.User.belongsToMany(db.User, {through : 'Follow', as: 'Followings'});
+        db.User.belongsToMany(db.Post, { through: 'Like', as: 'Liked' })
+        db.User.belongsToMany(db.User, { through: 'Follow', as: 'Followers', foreignKey: 'FollowingId' });
+        db.User.belongsToMany(db.User, { through: 'Follow', as: 'Followings', foreignKey: 'FollowerId' });
     };
 
     return User;

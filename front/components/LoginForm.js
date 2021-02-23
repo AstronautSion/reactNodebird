@@ -8,7 +8,7 @@ import useInput from '../hooks/useInput';
 const LoginForm = () =>{
     const [userId , onChangeUserId ] = useInput('');
     const [password, onPassword] = useInput('');
-    const { isLoggingIn } = useSelector(state => state.user);
+    const { me } = useSelector(state => state.user);
     const dispatch = useDispatch();
     
     const onSubmitForm = useCallback((e) =>{
@@ -36,7 +36,7 @@ const LoginForm = () =>{
                     <Input name="user-password" value={password} required onChange={onPassword} type="password" />
                 </div> 
                 <div>
-                    <Button type="primary" htmlType="submit" loading={isLoggingIn}>로그인</Button>
+                    <Button type="primary" htmlType="submit" loading={me}>로그인</Button>
                     <Link href="/signup"><a><Button>회원가입</Button></a></Link>
                 </div>
             </Form>
