@@ -35,11 +35,14 @@ router.post('/', async(req, res) => {  //회원가입
 router.get('/:id', (req, res) => { //남의 정보 가져오는 것.
 
 });
-router.post('/logout', (req, res) => {
+router.post('/logout', (req, res) => {// POST /api/usr/logout
 
 });
-router.post('/login', (req, res) => {
+router.post('/login', (req, res, next) => { // POST /api/usr/login
     passport.authenticate('local', (err, user, info) => {
+        console.log('err', err)
+        console.log('user', user)
+        console.log('info', info)
         if(err){
             console.error(err);
             return next(err);
@@ -52,11 +55,11 @@ router.post('/login', (req, res) => {
                 return next(loginErr);
             }
             //비밀번호 데이터 제외
-            const filtereUser = Object.assign({}, user);
+            const filtereUser = Object.assign({}, user.toJSON());
             delete filtereUser.password;
-            return res.json(user);
+            return res.json(filtereUser);
         });
-    });
+    })(req, res, next);
 });
 router.get('/:id/follow', (req, res) => {
 

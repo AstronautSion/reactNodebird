@@ -69,6 +69,7 @@ export const signUpRequestAction = (data) => ({
 
 
 const reducer  = (state = initalState, action) =>{
+    console.log(action)
     switch(action.type){
         case LOG_IN_REQUEST : {
             return {

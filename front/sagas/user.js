@@ -12,23 +12,27 @@ import {
     LOG_OUT_FAILURE, 
     LOG_OUT_REQUEST
 } from '../reducers/user';
+axios.defaults.baseURL = 'http://localhost:8088/api';
 
 /*******[ login ]**********/
-function loginAPI(){
+function loginAPI(data){
     //서버에 요청을 보내는 부분
-    return axios.post('/login');
+    return axios.post('/user/login', data, {
+        withCredentials: true, // 쿠키를 주고받는다.
+    });
 }
-function* login(){
+function* login(action){
     try{
-        //yield call(loginAPI);
-        yield delay(2000);
+        const result = yield call(loginAPI, action.data);
         yield put({ // put은 dispatch 동일
-            type: LOG_IN_SUCCESS
+            type: LOG_IN_SUCCESS,
+            data: result.data,
         });
-    } catch(e){
-        console.error(e);
+    } catch(error){
+        console.error(error);
         yield put({
-            type: LOG_IN_FAILURE
+            type: LOG_IN_FAILURE,
+            error: error.response.data,
         });
     }
 }
@@ -38,7 +42,7 @@ function* watchLogin(){
 
 /*******[ logout ]**********/
 function logoutAPI(){
-    return axios.post('/logout');
+    return axios.post('/logout/');
 }
 function* logout(){
     try {
@@ -58,9 +62,9 @@ function* watchLogout(){
 }
 
 /*******[ signup ]**********/
-function signupAPI(signUpData){
+function signupAPI(data){
     //서버에 요청을 보내는 부분
-    return axios.post('http://localhost:8088/api/user/', signUpData);
+    return axios.post('/user/', data);
 }
 function* signup(action){
     try {
@@ -68,8 +72,8 @@ function* signup(action){
         yield put({
             type: SIGN_UP_SUCCESS
         });
-    } catch (e) {
-        console.error(e);
+    } catch (error) {
+        console.error(error);
         yield put({
             type: SIGN_UP_FAILURE
         });

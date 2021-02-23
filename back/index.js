@@ -20,16 +20,20 @@ passportConfig();
 app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
-app.use(cors());
-app.use(cookieParser(process.env.cookiesecret));
+app.use(cors({
+    origin: true, 
+    credentials: true, 
+}));
+app.use(cookieParser(process.env.COOKIE_SECRET));
 app.use(expressSession({
-    resave: false,  //매번 세션 강제 저장.
     saveUninitialized: false, //빈 값도 저장.
-    secret: process.env.cookiesecret,
+    resave: false,  //매번 세션 강제 저장.
+    secret: process.env.COOKIE_SECRET,
     cookie: {
         httpOnly: true,
         secure: false, //https 쓸때 true
-    }
+    },
+    name: 'rnbck'
 }));
 app.use(passport.initialize());
 app.use(passport.session());
