@@ -32,7 +32,10 @@ router.post('/', async (req, res, next) => { // POST /api/post
     }
 });
 router.post('/:postId/comment', async (req, res, next) => {
+    console.log('asdfasdf::',req, res)
     try {
+        console.log(req.params.postId);
+
         const post = await Post.findOne({
             where: { id: req.params.postId },
         });
@@ -45,7 +48,7 @@ router.post('/:postId/comment', async (req, res, next) => {
             PostId: parseInt(req.params.postId, 10),
             UserId: req.user.id,
         });
-        console.log(comment);
+        
         const fullComment = await Comment.findOne({
             where: { id: comment.id },
             include: [{

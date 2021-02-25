@@ -39,7 +39,7 @@ function* watchAddPost(){
 
 /*******[ comment ]**********/
 function addCommentAPI(data){
-    return axios.post(`/${data.postId}/comment`,data,{ // POST  /api/post/comment
+    return axios.post(`/post/${data.postId}/comment`,data,{ // POST  /api/post/comment
         withCredentials:true,
     });
 }

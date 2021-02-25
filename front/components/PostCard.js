@@ -69,8 +69,8 @@ const PostCard = ({ post }) =>{
                             renderItem={item =>(
                                 <li>
                                     <Comment 
-                                        author={item.user.nickname}
-                                        avatar={<Avatar>{item.user.nickname[0]}</Avatar>}
+                                        author={item.User.nickname}
+                                        avatar={<Avatar>{item.User.nickname[0]}</Avatar>}
                                         content={item.content}
                                         datetime={item.createdAt}
                                     />
