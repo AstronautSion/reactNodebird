@@ -1,28 +1,28 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
 const passport = require('passport');
-const db = require('../models');
+const {Post, User} = require('../models');
 
 const router = express.Router();
 
 router.get('/', async (req, res) => {  
     try {
         if (req.user) {
-            const fullUser = await db.User.findOne({
+            const fullUser = await User.findOne({
                 where: { id: req.user.id },
                 attributes: {
                     exclude: ['password']
                 },
                 include: [{
-                    model: db.Post,
+                    model: Post,
                     as: 'Posts',
                     attributes: ['id']
                 },{
-                    model: db.User,
+                    model: User,
                     as: 'Followings',
                     attributes: ['id']
                 },{
-                    model: db.User,
+                    model: User,
                     as: 'Followers',
                     attributes: ['id']
                 }], 
@@ -38,25 +38,24 @@ router.get('/', async (req, res) => {
 });
 router.post('/', async(req, res) => {  //회원가입
     try {
-        const exUser = await db.User.findOne({
+        const exUser = await User.findOne({
             where: { 
-                userId: req.body.userId 
+                email: req.body.email 
             },  
         });
         if(exUser){
             return res.status(403).send('이미 사용중인 아이디입니다.');
         }
         const hashedPassword = await bcrypt.hash(req.body.password, 12); //salt는 10~13사이로 성능에 맞춰 작성.
-        const newUser = await db.User.create({
+        await User.create({
             nickname: req.body.nickname,
-            userId: req.body.userId,
+            email: req.body.email,
             password: hashedPassword,
         });
         res.status(201).send('ok');
     } catch (error) {
         console.error(error);
         next(error)
-        // return next(e);
     }
 });
 router.get('/:id', (req, res) => { //남의 정보 가져오는 것.
@@ -79,23 +78,24 @@ router.post('/login', (req, res, next) => { // POST /api/usr/login
         return req.login(user, async (loginErr) => {
             console.error(user)
             if(loginErr){
+                console.error(loginErr);
                 return next(loginErr);
             }
-            const fullUser = await db.User.findOne({
+            const fullUser = await User.findOne({
                 where: {id: user.id },
                 attributes: {
                     exclude: ['password']
                 },
                 include: [{
-                    model: db.Post,
+                    model: Post,
                     as: 'Posts',
                     attributes: ['id']
                 },{
-                    model: db.User,
+                    model: User,
                     as: 'Followings',
                     attributes: ['id']
                 },{
-                    model: db.User,
+                    model: User,
                     as: 'Followers',
                     attributes: ['id']
                 }], 

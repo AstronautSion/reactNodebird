@@ -11,7 +11,7 @@ const Signup = () =>{
     const [passwordError, setPasswordError] = useState(false);
     const [termError, setTermError] = useState(false);
 
-    const [userId, onChangeUserId] = useInput('');
+    const [email, onChangeEmail] = useInput('');
     const [nickname, onChangeNickname] = useInput('');
     const [password, onChangePassword] = useInput('');
     const  {isSigningUp, me} = useSelector(state => state.user);
@@ -36,14 +36,14 @@ const Signup = () =>{
         dispatch({
             type: SIGN_UP_REQUEST,
             data: {
-                userId,
+                email,
                 password,
                 nickname
             }
         });
 
         //Router.push('/');
-    }, [password, passwordCheck, term, userId, nickname]);
+    }, [password, passwordCheck, term, email, nickname]);
    
     const onChangePasswordCheck = useCallback((e) => {
         setPasswordError(e.target.value !== password);
@@ -62,7 +62,7 @@ const Signup = () =>{
                 <div>
                     <label htmlFor="user-id">아이디</label>
                     <br/>
-                    <Input name="user-id" value={userId} required onChange={onChangeUserId} />
+                    <Input name="user-id" value={email} required onChange={onChangeEmail} />
                 </div>
                 <div>
                     <label htmlFor="user-nickname">닉네임</label>

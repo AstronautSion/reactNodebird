@@ -6,32 +6,35 @@ import { ADD_POST_REQUEST } from '../reducers/post';
 
 const PostForm = () =>{
     const dispatch = useDispatch();
-    const [text, setText] = useState(''); 
+    const [content, setContent] = useState(''); 
     const { imagePaths, isAddingPost ,postAdded } = useSelector(state => state.post);
 
     useEffect(()=>{
-        setText('');
+        setContent('');
     },[postAdded === true])
 
-    const onChangeText = useCallback((e)=>{
-        setText(e.target.value);
+    const onChangeContent = useCallback((e)=>{
+        setContent(e.target.value);
     }, []);
     const onSubmitFrom = useCallback((e) =>{
         e.preventDefault();
+        if(!content || !content.trim()){
+            return alert('게시글을 작성하세요.');
+        }
         dispatch({
             type: ADD_POST_REQUEST,
             data: {
-                text,
+                content : content.trim(),
             }
         });
-    }, []);
+    }, [content]);
 
     
 
     return(
         <>
             <Form style={{marginBottom : '20px'}} encType="multipart/form-data" onSubmit={onSubmitFrom}>
-                <Input.TextArea maxLength={140} placeholder="어떤 신기한 일이 있었나요?" value={text} onChange={onChangeText} />   
+                <Input.TextArea maxLength={140} placeholder="어떤 신기한 일이 있었나요?" value={content} onChange={onChangeContent} />   
                 <div>
                     <Button>이미지 업로드</Button>
                     <Button type="primary" style={{float:'right'}} htmlType="submit" loading={isAddingPost}>짹짹</Button>

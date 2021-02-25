@@ -1,10 +1,12 @@
 module.exports = (sequelize, DataTypes) => {
     const Comment = sequelize.define('Comment', {
-        name: {
+        content: {
             type: DataTypes.STRING(20),
             allowNull: false, //필수
         },
     },{
+        modelName: 'Comment',
+        tableName: 'comments',
         charset: 'utf8mb4',
         collate: 'utf8mb4_general_ci',
     });

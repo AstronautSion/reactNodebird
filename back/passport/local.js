@@ -5,11 +5,11 @@ const { User } = require('../models');
 
 module.exports = () =>{
     passport.use(new LocalStrategy({
-        usernameField: 'userId',
+        usernameField: 'email',
         passwordField: 'password',
-    }, async (userId, password, done) => {
+    }, async (email, password, done) => {
         try {
-            const user = await User.findOne({ where: {userId }});
+            const user = await User.findOne({ where: {email }});
             if(!user){
                 return done(null, false, { reason: '존재하지 않는 사용자입니다.'});
             }

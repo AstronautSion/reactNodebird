@@ -6,7 +6,7 @@ import { LOG_IN_REQUEST } from '../reducers/user';
 import useInput from '../hooks/useInput';
 
 const LoginForm = () =>{
-    const [userId , onChangeUserId ] = useInput('');
+    const [email , onChangeEmail ] = useInput('');
     const [password, onPassword] = useInput('');
     const { me } = useSelector(state => state.user);
     const dispatch = useDispatch();
@@ -16,11 +16,11 @@ const LoginForm = () =>{
         dispatch({
             type: LOG_IN_REQUEST,
             data: {
-                userId,
+                email,
                 password
             }
         });
-    },[userId, password]);
+    },[email, password]);
  
     return(
         <>
@@ -28,7 +28,7 @@ const LoginForm = () =>{
                 <div>
                     <label htmlFor="user-id">아이디</label>
                     <br />
-                    <Input name="user-id" value={userId} required onChange={onChangeUserId} />
+                    <Input name="user-id" value={email} required onChange={onChangeEmail} />
                 </div> 
                 <div>
                     <label htmlFor="user-password">비밀번호</label>

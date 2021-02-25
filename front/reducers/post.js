@@ -1,15 +1,17 @@
 export const initalState = {
-    mainPosts: [{
-        id: 1,
-        user: {
-            id: 1,
-            nickname: '고양이',
-        },
-        content: '첫번째 게시글 hello world',
-        img: 'https://photo.jtbc.joins.com/news/2019/06/12/20190612162809185.jpg',
-        createdAt: String(new Date()),
-        comments: [],
-    }], // 화면에 보일 포스트들
+    mainPosts: [
+    //     {
+    //     id: 1,
+    //     user: {
+    //         id: 1,
+    //         nickname: '고양이',
+    //     },
+    //     content: '첫번째 게시글 hello world',
+    //     img: 'https://photo.jtbc.joins.com/news/2019/06/12/20190612162809185.jpg',
+    //     createdAt: String(new Date()),
+    //     comments: [],
+    // }
+    ], // 화면에 보일 포스트들
     imagePaths: [], //미리보기 이미지 경로
     addPostErrorReason: '', //포스트 업로드 실패 사유
     isAddingPost: false, //포스트 업로드 중
@@ -18,18 +20,7 @@ export const initalState = {
     addCommentErrorReason: '',
     commentAdded: false,
 };
-
-const dummyPost = {
-    id: 1,
-    user: {
-        id: 1,
-        nickname: '고양이',
-    },
-    content: '나는 더미',
-    createdAt: String(new Date()),
-    comments: [],
-
-}   
+ 
 const dummyComment = {
     id: 2,
     user: {
@@ -40,9 +31,9 @@ const dummyComment = {
     content: '더미 댓글',
 }
 
-export const LOAD_MAIN_POSTS_REQUEST = 'LOAD_MAIN_POSTS_REQUEST';
-export const LOAD_MAIN_POSTS_SUCCESS = 'LOAD_MAIN_POSTS_SUCCESS';
-export const LOAD_MAIN_POSTS_FAILURE = 'LOAD_MAIN_POSTS_FAILURE';
+export const LOAD_POSTS_REQUEST = 'LOAD_POSTS_REQUEST';
+export const LOAD_POSTS_SUCCESS = 'LOAD_POSTS_SUCCESS';
+export const LOAD_POSTS_FAILURE = 'LOAD_POSTS_FAILURE';
 
 export const LOAD_HASHTAG_POSTS_REQUEST = 'LOAD_HASHTAG_POSTS_REQUEST';
 export const LOAD_HASHTAG_POSTS_SUCCESS = 'LOAD_HASHTAG_POSTS_SUCCESS';
@@ -99,11 +90,12 @@ const reducer = (state = initalState, action) =>{
             }
         }
         case ADD_POST_SUCCESS: {
+            
             return {
                 ...state,
                 isAddingPost: false,
                 postAdded: true,
-                mainPosts: [dummyPost, ...state.mainPosts]
+                mainPosts: [action.data, ...state.mainPosts]
             }
         }
         case ADD_POST_FAILURE: {
@@ -114,6 +106,25 @@ const reducer = (state = initalState, action) =>{
                 addPostErrorReason: action.error,
             }
         }
+
+        case LOAD_POSTS_REQUEST: {
+            return {
+                ...state,
+                mainPosts: [],
+            }
+        }
+        case LOAD_POSTS_SUCCESS: {
+            return {
+                ...state,
+                mainPosts: action.data,
+            }
+        }
+        case LOAD_POSTS_FAILURE: {
+            return {
+                ...state,
+            }
+        }
+
         case ADD_COMMENT_REQUEST: {
             return {
                 ...state,
@@ -125,7 +136,7 @@ const reducer = (state = initalState, action) =>{
         case ADD_COMMENT_SUCCESS: {
             const postIndex = state.mainPosts.findIndex(v=>v.id === action.data.postId);
             const post = state.mainPosts[postIndex];
-            const comments = [...post.comments, dummyComment];
+            const comments = [...post.comments, action.data];
             const mainPosts = [...state.mainPosts];
             mainPosts[postIndex] = { ...post, comments};
             return {

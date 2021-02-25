@@ -4,8 +4,8 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING(20),
             allowNull: false, //필수
         },
-        userId: {
-            type: DataTypes.STRING(20),
+        email: {
+            type: DataTypes.STRING(30),
             allowNull: false,
             unique: true, //고유값
         },
@@ -15,7 +15,7 @@ module.exports = (sequelize, DataTypes) => {
         },
     },{
         modelName: 'User',
-      tableName: 'users',
+        tableName: 'users',
         charset: 'utf8',
         collate: 'utf8_general_ci',
     });

@@ -27,7 +27,6 @@ const AppLayout = ({ children }) =>{
                     <Input.Search enterButton style={{ verticalAlign: 'middle' }}/>
                 </Menu.Item>
             </Menu>
-            { !me && <Link href="/signup"><a><Button>Sign up</Button></a></Link>}
             <Row gutter={10}>
                 <Col xs={24} md={6}>
                     { me ? <UserProfile /> : <LoginForm /> }

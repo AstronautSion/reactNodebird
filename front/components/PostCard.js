@@ -10,6 +10,7 @@ const PostCard = ({ post }) =>{
     const { me } = useSelector(state => state.user);
     const { commentAdded, isAddingComment } = useSelector(state => state.post);
     const dispatch = useDispatch();
+    
 
     const onToggleComment = useCallback(() =>{
         if(!me){
@@ -21,11 +22,9 @@ const PostCard = ({ post }) =>{
         e.preventDefault();
         dispatch({
             type: ADD_COMMENT_REQUEST,
-            data: {
-                postId : post.id
-            }
-        })
-    },[]);
+            data: { content: commentText, postId: post.id, userId: me.id },
+          });
+    },[commentText]);
     const onChangeCommentText = useCallback((e)=>{
         setCommentText(e.target.value);
     },[]);
@@ -33,51 +32,54 @@ const PostCard = ({ post }) =>{
     useEffect(()=>{
         setCommentText('');
     },[commentAdded === true])
-
+    
     return(
-        <>
-            <Card
-                key={post.createdAt}
-                cover={post.img && <img alt="example" src={post.img} />}
-                actions={[
-                    <Icon type="retweet" key="retweet" />,
-                    <Icon type="heart" key="heart" />,
-                    <Icon type="message" key="message" onClick={onToggleComment} />,
-                    <Icon type="ellipsis" key="ellipsis" />
-                ]}
-                extra={<Button>팔로우</Button>}
-            >
-                <Card.Meta
-                    avatar={<Avatar>{post.user.nickname[0]}</Avatar>}
-                    title={post.user.nickname}
-                    description={post.content}
-                />
-            </Card> 
-            {commentFormOpend && (
-                <>
-                    <Form onSubmit={onSubmitComment}>
-                        <Form.Item>
-                            <Input.TextArea rows={4} value={commentText} onChange={onChangeCommentText} />
-                        </Form.Item>
-                        <Button type="primary" htmlType="submit" loading={isAddingComment}>삐약</Button>
-                    </Form>
-                    <List 
-                        header={`${post.comments ? post.comments.length : 0} 댓글`}
-                        itemLayout="horizontal"
-                        dataSource={post.comments || []}
-                        renderItem={item =>(
-                            <li>
-                                <Comment 
-                                    author={item.user.nickname}
-                                    avatar={<Avatar>{item.user.nickname[0]}</Avatar>}
-                                    content={item.content}
-                                    datetime={item.createdAt}
-                                />
-                            </li>
-                        )}
+        <>  
+            {post.User && 
+                <Card
+                    key={post.createdAt}
+                    cover={post.img && <img alt="example" src={post.img} />}
+                    actions={[
+                        <Icon type="retweet" key="retweet" />,
+                        <Icon type="heart" key="heart" />,
+                        <Icon type="message" key="message" onClick={onToggleComment} />,
+                        <Icon type="ellipsis" key="ellipsis" />
+                    ]}
+                    extra={<Button>팔로우</Button>}
+                >
+                    <Card.Meta
+                        avatar={<Avatar>{post.User.nickname}</Avatar>}
+                        title={post.User.nickname}
+                        description={post.content}
                     />
-                </>
-            )}
+                </Card> 
+            }
+                {commentFormOpend && (
+                    <>
+                        <Form onSubmit={onSubmitComment}>
+                            <Form.Item>
+                                <Input.TextArea rows={4} value={commentText} onChange={onChangeCommentText} />
+                            </Form.Item>
+                            <Button type="primary" htmlType="submit" loading={isAddingComment}>삐약</Button>
+                        </Form>
+                        <List 
+                            header={`${post.Comments ? post.Comments.length : 0} 댓글`}
+                            itemLayout="horizontal"
+                            dataSource={post.Comments || []}
+                            renderItem={item =>(
+                                <li>
+                                    <Comment 
+                                        author={item.user.nickname}
+                                        avatar={<Avatar>{item.user.nickname[0]}</Avatar>}
+                                        content={item.content}
+                                        datetime={item.createdAt}
+                                    />
+                                </li>
+                            )}
+                        />
+                    </>
+                )}
+            
         </>
     )
 }

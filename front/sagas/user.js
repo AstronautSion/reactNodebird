@@ -1,6 +1,5 @@
-import {all, fork, put, takeLatest, delay, call } from 'redux-saga/effects';
 import axios from 'axios';
-
+import {all, fork, put, takeLatest, call } from 'redux-saga/effects';
 import {
     LOG_IN_REQUEST,
     LOG_IN_SUCCESS, 
@@ -15,7 +14,6 @@ import {
     LOAD_USER_SUCCESS, 
     LOAD_USER_FAILURE, 
 } from '../reducers/user';
-axios.defaults.baseURL = 'http://localhost:8088/api';
 
 /*******[ login ]**********/
 function loginAPI(data){
