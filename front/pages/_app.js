@@ -33,6 +33,16 @@ NodeBird.propTypes = {
     store : PropTypes.object,
 };
 
+NodeBird.getInitialProps = async (context) => {
+    console.log(context);
+    const {ctx, Component } = context;
+    let pageProps = {};
+    if(Component.getInitialProps){   
+        pageProps = await Component.getInitialProps(ctx);
+    }
+    return { pageProps };
+};
+ 
 export default withRedux((initailState, options)=>{
     const sagaMiddleware = createSagaMiddleware();
     const middlewares = [sagaMiddleware];

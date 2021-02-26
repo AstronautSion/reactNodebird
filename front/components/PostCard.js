@@ -37,7 +37,7 @@ const PostCard = ({ post }) =>{
                         description={<div>{post.content.split(/(#[^\s]+)/g).map((v) => {
                             if (v.match(/#[^\s]+/)){
                                 return (
-                                    <Link key={v} href="/hashtag"><a>{v}</a></Link>
+                                    <Link key={v} href={`/hashtag/${v.slice(1)}`}><a>{v}</a></Link>
                                 );
                             }
                             return v;

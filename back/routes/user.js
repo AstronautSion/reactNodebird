@@ -5,7 +5,7 @@ const {Post, User} = require('../models');
 
 const router = express.Router();
 
-router.get('/', async (req, res) => {  
+router.get('/', async (req, res) => {  // GET /api/user
     try {
         if (req.user) {
             const fullUser = await User.findOne({
@@ -36,7 +36,7 @@ router.get('/', async (req, res) => {
         next(error);
     }
 });
-router.post('/', async(req, res) => {  //회원가입
+router.post('/', async(req, res) => {  // POST /api/user
     try {
         const exUser = await User.findOne({
             where: { 
@@ -58,15 +58,16 @@ router.post('/', async(req, res) => {  //회원가입
         next(error)
     }
 });
-router.get('/:id', (req, res) => { //남의 정보 가져오는 것.
+router.get('/:id', (req, res) => { // GET /api/:id
 
 });
-router.post('/logout', (req, res) => {// POST /api/usr/logout
+
+router.post('/logout', (req, res) => {// POST /api/user/logout
     req.logout();
     req.session.destroy();
     res.send('ok');
 });
-router.post('/login', (req, res, next) => { // POST /api/usr/login
+router.post('/login', (req, res, next) => { // POST /api/user/login
     passport.authenticate('local', (err, user, info) => {
         if(err){
             console.error(err);
@@ -105,16 +106,16 @@ router.post('/login', (req, res, next) => { // POST /api/usr/login
         });
     })(req, res, next);
 });
-router.get('/:id/follow', (req, res) => {
+router.get('/:id/follow', (req, res) => {  // GET /api/user/follow
 
 });
-router.delete('/:id/follow', (req, res) => {
+router.delete('/:id/follow', (req, res) => {// DELETE /api/user/:id/follow
 
 });
-router.delete('/:id/follower', (req, res) => {
+router.delete('/:id/follower', (req, res) => {// DELETE /api/user/:id/follower
 
 });
-router.get('/:id/posts', (req, res) => {
+router.get('/:id/posts', (req, res) => { // GET /api/user/:id/posts
 
 });
 

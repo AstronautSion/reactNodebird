@@ -31,11 +31,8 @@ router.post('/', async (req, res, next) => { // POST /api/post
         next(error);
     }
 });
-router.post('/:postId/comment', async (req, res, next) => {
-    console.log('asdfasdf::',req, res)
+router.post('/:postId/comment', async (req, res, next) => { // POST  /api/post/:postId/comment
     try {
-        console.log(req.params.postId);
-
         const post = await Post.findOne({
             where: { id: req.params.postId },
         });
@@ -62,7 +59,7 @@ router.post('/:postId/comment', async (req, res, next) => {
         next(error);
     }
 })
-router.post('/images', (req, res) => {
+router.post('/images', (req, res) => { // POST  /api/post/images
 
 });
 

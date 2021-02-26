@@ -10,6 +10,9 @@ import {
     ADD_COMMENT_SUCCESS,
     ADD_COMMENT_FAILURE,
     ADD_COMMENT_REQUEST,
+    LOAD_HASHTAG_POSTS_SUCCESS,
+    LOAD_HASHTAG_POSTS_FAILURE,
+    LOAD_HASHTAG_POSTS_REQUEST,
  }  from '../reducers/post';
 
  /*******[ add post ]**********/
@@ -87,6 +90,29 @@ function* watchLoadPosts(){
 }
 
 
+/*******[ load hash tag ]**********/
+function loadHashtagPostsAPI(tag) {
+    return axios.get(`/hashtag/${tag}`);
+  }
+  
+  function* loadHashtagPosts(action) {
+    try {
+      const result = yield call(loadHashtagPostsAPI, action.data);
+      yield put({
+        type: LOAD_HASHTAG_POSTS_SUCCESS,
+        data: result.data,
+      });
+    } catch (error) {
+      yield put({
+        type: LOAD_HASHTAG_POSTS_FAILURE,
+        error,
+      });
+    }
+  }
+  
+  function* watchLoadHashtagPosts() {
+    yield takeLatest(LOAD_HASHTAG_POSTS_REQUEST, loadHashtagPosts);
+  }
 
 
 
@@ -95,5 +121,6 @@ export default function* postSaga(){
         fork(watchLoadPosts),
         fork(watchAddPost),
         fork(watchAddComment),
+        fork(watchLoadHashtagPosts),
     ]);
 }
