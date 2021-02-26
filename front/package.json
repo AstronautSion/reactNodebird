@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "next",
+    "dev": "nodemon",
     "build": "next build",
     "start": "next start"
   },
@@ -13,6 +13,11 @@
   "dependencies": {
     "antd": "3.16.6",
     "axios": "^0.21.1",
+    "cookie-parser": "^1.4.5",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "express-session": "^1.17.1",
+    "morgan": "^1.10.0",
     "next": "^8.1.0",
     "next-redux-wrapper": "5.0.0",
     "prop-types": "^15.7.2",
@@ -30,7 +35,7 @@
     "eslint-plugin-jsx-a11y": "^6.4.1",
     "eslint-plugin-react": "^7.12.4",
     "eslint-plugin-react-hooks": "^1.6.0",
-    "nodemon": "^1.19.0",
+    "nodemon": "^2.0.7",
     "webpack": "^4.30.0"
   },
   "repository": "https://AstronautSion@github.com/AstronautSion/ex-react-nodebird.git"

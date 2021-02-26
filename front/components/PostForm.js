@@ -42,7 +42,7 @@ const PostForm = () =>{
                 <div>
                     {imagePaths.map((v) =>(
                         <div key={v} styly={{ display: 'inline-block' }}>
-                            <img src={`http://localhost:3000/${v}`} style={{ width: '200px' }} alt={v} />
+                            <img src={`http://localhost:3060/${v}`} style={{ width: '200px' }} alt={v} />
                             <div>
                                 <Button>제거</Button>
                             </div>
