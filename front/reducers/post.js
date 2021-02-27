@@ -150,6 +150,24 @@ const reducer = (state = initalState, action) =>{
             }
         }
 
+        case LOAD_USER_POSTS_REQUEST: {
+            return {
+                ...state,
+                mainPosts: [],
+            }
+        }
+        case LOAD_USER_POSTS_SUCCESS: {
+            return {
+                ...state,
+                mainPosts: action.data,
+              };
+        }
+        case LOAD_USER_POSTS_FAILURE:{
+            return {
+                ...state,
+            }
+        }
+
 
         default: {
             return {

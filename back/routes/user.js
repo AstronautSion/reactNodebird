@@ -58,8 +58,37 @@ router.post('/', async(req, res) => {  // POST /api/user
         next(error)
     }
 });
-router.get('/:id', (req, res) => { // GET /api/:id
-
+router.get('/:id', async (req, res) => { // GET /api/:id
+    try {
+        const user = await User.findOne({
+            where : { id : parseInt(req.params.id, 10) },
+            attributes: {
+                exclude: ['password']
+            },
+            include: [{
+                model: Post,
+                as: 'Posts',
+                attributes: ['id']
+            },{
+                model: User,
+                as: 'Followings',
+                attributes: ['id'],
+            }, {
+                model: User,
+                as: 'Followers',
+                attributes: ['id'],
+            }]
+        })
+        const jsonUser = user.toJSON();
+        jsonUser.Posts = jsonUser.Posts ? jsonUser.Posts.length : 0;
+        jsonUser.Followings = jsonUser.Followings ? jsonUser.Followings.length : 0;
+        jsonUser.Followers = jsonUser.Followers ? jsonUser.Followers.length : 0;
+        res.status(200).json(jsonUser);
+        
+    } catch (error) {
+        console.log(error);
+        next(error);
+    }
 });
 
 router.post('/logout', (req, res) => {// POST /api/user/logout
