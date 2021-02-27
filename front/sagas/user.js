@@ -10,9 +10,9 @@ import {
     SIGN_UP_REQUEST, 
     SIGN_UP_SUCCESS, 
     SIGN_UP_FAILURE, 
-    LOAD_USER_REQUEST, 
-    LOAD_USER_SUCCESS, 
-    LOAD_USER_FAILURE, 
+    LOAD_MAIN_USER_REQUEST, 
+    LOAD_MAIN_USER_SUCCESS, 
+    LOAD_MAIN_USER_FAILURE, 
 } from '../reducers/user';
 
 /*******[ login ]**********/
@@ -88,28 +88,32 @@ function* watchSignup(){
 }
 
 /*******[ load user ]**********/
-function loadUserAPI(){
+function loadUserAPI(data){
     //서버에 요청을 보내는 부분
-    return axios.get('/user',{
+    return axios.get( data ? `/user/${data}` : '/user/',{
         withCredentials:true
     });
 }
-function* loadUser(){
+function* loadUser(action){
+    console.log('actions>>',action);
     try {
-        const result = yield call(loadUserAPI);
+        const result = yield call(loadUserAPI, action.data);
+        console.log('***result Data',result.data, action.data);
         yield put({
-            type: LOAD_USER_SUCCESS,
+            type: LOAD_MAIN_USER_SUCCESS,
             data: result.data,
+            me: !action.data,
         });
     } catch (error) {
         console.error(error);
         yield put({
-            type: LOAD_USER_FAILURE
+            type: LOAD_MAIN_USER_FAILURE,
+            error,
         });
     }
 }
 function* watchLoadUser(){
-    yield takeLatest(LOAD_USER_REQUEST, loadUser);
+    yield takeLatest(LOAD_MAIN_USER_REQUEST, loadUser);
 }
 
 

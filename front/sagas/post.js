@@ -4,9 +4,9 @@ import {
     ADD_POST_REQUEST,
     ADD_POST_SUCCESS,
     ADD_POST_FAILURE,
-    LOAD_POSTS_REQUEST,
-    LOAD_POSTS_SUCCESS,
-    LOAD_POSTS_FAILURE,
+    LOAD_MAIN_POSTS_REQUEST,
+    LOAD_MAIN_POSTS_SUCCESS,
+    LOAD_MAIN_POSTS_FAILURE,
     ADD_COMMENT_SUCCESS,
     ADD_COMMENT_FAILURE,
     ADD_COMMENT_REQUEST,
@@ -77,30 +77,30 @@ function* loadMainPosts(){
     try {
         const result = yield call(loadPostsAPI);
         yield put({
-            type: LOAD_POSTS_SUCCESS,
+            type: LOAD_MAIN_POSTS_SUCCESS,
             data: result.data,
         });
     } catch (error) {
         console.error(error);
         yield put({
-            type: LOAD_POSTS_FAILURE,
+            type: LOAD_MAIN_POSTS_FAILURE,
             error,
         })
     }
 }
 function* watchLoadPosts(){
-    yield takeLatest(LOAD_POSTS_REQUEST, loadMainPosts);
+    yield takeLatest(LOAD_MAIN_POSTS_REQUEST, loadMainPosts);
 }
 
 
 /*******[ load hash tag ]**********/
-function loadHashtagPostsAPI(tag) {
-    return axios.get(`/hashtag/${tag}`);
+function loadHashtagPostsAPI(tagName, lastId = 0) {
+    return axios.get(`/hashtag/${tagName}?lastId=${lastId}`);
   }
   
   function* loadHashtagPosts(action) {
     try {
-      const result = yield call(loadHashtagPostsAPI, action.data);
+      const result = yield call(loadHashtagPostsAPI, action.data, action.lastId);
       yield put({
         type: LOAD_HASHTAG_POSTS_SUCCESS,
         data: result.data,
@@ -120,7 +120,7 @@ function loadHashtagPostsAPI(tag) {
 
 /*******[ load user post ]**********/
 function loadUserPostsAPI(id) {
-    return axios.get(`/user/${id}`);
+    return axios.get(`/user/${id}/posts`);
   }
   
   function* loadUserPosts(action) {

@@ -58,36 +58,33 @@ router.post('/', async(req, res) => {  // POST /api/user
         next(error)
     }
 });
-router.get('/:id', async (req, res) => { // GET /api/:id
+router.get('/:id', async (req, res, next) => { // 남의 정보 가져오는 것 ex) /api/user/123
     try {
-        const user = await User.findOne({
-            where : { id : parseInt(req.params.id, 10) },
-            attributes: {
-                exclude: ['password']
-            },
-            include: [{
-                model: Post,
-                as: 'Posts',
-                attributes: ['id']
-            },{
-                model: User,
-                as: 'Followings',
-                attributes: ['id'],
-            }, {
-                model: User,
-                as: 'Followers',
-                attributes: ['id'],
-            }]
-        })
-        const jsonUser = user.toJSON();
-        jsonUser.Posts = jsonUser.Posts ? jsonUser.Posts.length : 0;
-        jsonUser.Followings = jsonUser.Followings ? jsonUser.Followings.length : 0;
-        jsonUser.Followers = jsonUser.Followers ? jsonUser.Followers.length : 0;
-        res.status(200).json(jsonUser);
-        
-    } catch (error) {
-        console.log(error);
-        next(error);
+      const user = await User.findOne({
+        where: { id: parseInt(req.params.id, 10) },
+        include: [{
+          model: Post,
+          as: 'Posts',
+          attributes: ['id'],
+        }, {
+          model: User,
+          as: 'Followings',
+          attributes: ['id'],
+        }, {
+          model: User,
+          as: 'Followers',
+          attributes: ['id'],
+        }],
+        attributes: ['id', 'nickname'],
+      });
+      const jsonUser = user.toJSON();
+      jsonUser.Posts = jsonUser.Posts ? jsonUser.Posts.length : 0;
+      jsonUser.Followings = jsonUser.Followings ? jsonUser.Followings.length : 0;
+      jsonUser.Followers = jsonUser.Followers ? jsonUser.Followers.length : 0;
+      res.json(jsonUser);
+    } catch (e) {
+      console.error(e);
+      next(e);
     }
 });
 
@@ -135,6 +132,36 @@ router.post('/login', (req, res, next) => { // POST /api/user/login
         });
     })(req, res, next);
 });
+
+router.get('/:id/posts', async (req, res, next) => {
+    
+    try {
+      const posts = await Post.findAll({
+        where: {
+          UserId: parseInt(req.params.id, 10),
+          RetweetId: null,
+        },
+        include: [{
+          model: User,
+          attributes: ['id', 'nickname'],
+        }
+        // , {
+        //   model: Image,
+        // }
+        , {
+          model: User,
+          through: 'Like',
+          as: 'Likers',
+          attributes: ['id'],
+        }],
+      });
+      
+      res.json(posts);
+    } catch (error) {
+      console.error(error);
+      next(error);
+    }
+  });
 router.get('/:id/follow', (req, res) => {  // GET /api/user/follow
 
 });
@@ -142,9 +169,6 @@ router.delete('/:id/follow', (req, res) => {// DELETE /api/user/:id/follow
 
 });
 router.delete('/:id/follower', (req, res) => {// DELETE /api/user/:id/follower
-
-});
-router.get('/:id/posts', (req, res) => { // GET /api/user/:id/posts
 
 });
 

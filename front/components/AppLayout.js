@@ -5,7 +5,7 @@ import {Menu, Input, Button, Row, Col } from 'antd';
 import LoginForm from '../components/LoginForm';
 import UserProfile from './UserProfile';
 import { useDispatch, useSelector } from 'react-redux';
-import { LOAD_USER_REQUEST } from '../reducers/user';
+import { LOAD_MAIN_USER_REQUEST } from '../reducers/user';
 
 const AppLayout = ({ children }) =>{
     const { me } = useSelector(state => state.user);
@@ -13,7 +13,7 @@ const AppLayout = ({ children }) =>{
     useEffect(()=>{
         if(!me){
             dispatch({
-                type: LOAD_USER_REQUEST,
+                type: LOAD_MAIN_USER_REQUEST,
             })
         }
     },[])
