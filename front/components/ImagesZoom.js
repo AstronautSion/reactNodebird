@@ -25,7 +25,7 @@ const ImagesZoom = ({ images, onClose }) => {
             {images.map((v) => {
               return (
                 <div style={{ padding: 32, textAlign: 'center' }}>
-                  <img src={`http://localhost:8808/images/${v.src}`} style={{ margin: '0 auto', maxHeight: 750 }} />
+                  <img src={`http://localhost:8088/images/${v.src}`} style={{ margin: '0 auto', maxHeight: 750 }} />
                 </div>
               );
             })}

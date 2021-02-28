@@ -4,7 +4,7 @@ import { Icon } from 'antd';
 import ImagesZoom from './ImagesZoom';
 
 const PostImages = ({ images }) => {
-  const imageUrl = 'http://localhost:8808/images/';
+  const imageUrl = 'http://localhost:8088/images/';
   const [showImagesZoom, setShowImagesZoom] = useState(false);
 
   const onZoom = useCallback(() => {
@@ -30,7 +30,7 @@ const PostImages = ({ images }) => {
           <img src={imageUrl + images[0].src} width="50%" onClick={onZoom} />
           <img src={imageUrl + images[1].src} width="50%" onClick={onZoom} />
         </div>
-        {showImagesZoom && <ImagesZoom images={images} onClose={onClose} />}
+        {showImagesZoom && <ImagesZoom key={1} images={images} onClose={onClose} />}
       </>
   );
   }
