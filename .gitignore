@@ -6,6 +6,7 @@ front/yarn.lock
 front/package-lock.json
 
 back/node_modules/
+back/uploads/
 back/yarn-error.log
 back/yarn.lock
 back/package-lock.json

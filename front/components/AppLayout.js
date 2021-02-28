@@ -8,7 +8,7 @@ import UserProfile from './UserProfile';
 import { LOAD_USER_REQUEST } from '../reducers/user';
 
 const AppLayout = ({ children }) => {
-  const { isLoggedIn, me } = useSelector(state => state.user);
+  const { me } = useSelector(state => state.user);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -38,7 +38,7 @@ const AppLayout = ({ children }) => {
           {children}
         </Col>
         <Col xs={24} md={6}>
-          <Link href="https://www.zerocho.com"><a target="_blank">Made by ZeroCho</a></Link>
+          <Link href="/"><a target="_blank">Made by AstronautSion</a></Link>
         </Col>
       </Row>
     </div>

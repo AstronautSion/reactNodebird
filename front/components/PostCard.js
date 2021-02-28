@@ -1,4 +1,3 @@
-/* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useCallback, useEffect, useState } from 'react';
 import { Avatar, Button, Card, Comment, Form, Icon, Input, List, Popover } from 'antd';
 import Link from 'next/link';
@@ -132,13 +131,7 @@ const PostCard = ({ post }) => {
           </Popover>,
         ]}
         title={post.RetweetId ? `${post.User.nickname}님이 리트윗하셨습니다.` : null}
-        // eslint-disable-next-line no-nested-ternary
-        extra={(!me || post.User.id === me.id)
-          ? null
-          : me.Followings && me.Followings.find(v => v.id === post.User.id)
-            ? <Button onClick={onUnfollow(post.User.id)}>언팔로우</Button>
-            : <Button onClick={onFollow(post.User.id)}>팔로우</Button>}
-      >
+        extra={ !me || post.User.id === me.id ? null : me.Followings && me.Followings.find(v => v.id === post.User.id) ? <Button onClick={onUnfollow(post.User.id)}>언팔로우</Button> : <Button onClick={onFollow(post.User.id)}>팔로우</Button>}>
         {post.RetweetId && post.Retweet
           ? (
             <Card
@@ -207,7 +200,7 @@ PostCard.propTypes = {
     User: PropTypes.object,
     content: PropTypes.string,
     img: PropTypes.string,
-    createdAt: PropTypes.object,
+    createdAt: PropTypes.string,
   }).isRequired,
 };
 

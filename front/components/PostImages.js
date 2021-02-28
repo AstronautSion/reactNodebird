@@ -4,6 +4,7 @@ import { Icon } from 'antd';
 import ImagesZoom from './ImagesZoom';
 
 const PostImages = ({ images }) => {
+  const imageUrl = 'http://localhost:8808/images/';
   const [showImagesZoom, setShowImagesZoom] = useState(false);
 
   const onZoom = useCallback(() => {
@@ -17,7 +18,7 @@ const PostImages = ({ images }) => {
   if (images.length === 1) {
     return (
       <>
-        <img src={`http://localhost:8808/${images[0].src}`} onClick={onZoom} />
+        <img src={imageUrl + images[0].src} onClick={onZoom} />
         {showImagesZoom && <ImagesZoom images={images} onClose={onClose} />}
       </>
     );
@@ -26,8 +27,8 @@ const PostImages = ({ images }) => {
     return (
       <>
         <div>
-          <img src={`http://localhost:8808/${images[0].src}`} width="50%" onClick={onZoom} />
-          <img src={`http://localhost:8808/${images[1].src}`} width="50%" onClick={onZoom} />
+          <img src={imageUrl + images[0].src} width="50%" onClick={onZoom} />
+          <img src={imageUrl + images[1].src} width="50%" onClick={onZoom} />
         </div>
         {showImagesZoom && <ImagesZoom images={images} onClose={onClose} />}
       </>
@@ -36,7 +37,7 @@ const PostImages = ({ images }) => {
   return (
     <>
     <div>
-      <img src={`http://localhost:8808/${images[0].src}`} width="50%" onClick={onZoom} />
+      <img src={imageUrl + images[0].src} width="50%" onClick={onZoom} />
       <div style={{ display: 'inline-block', width: '50%', textAlign: 'center', verticalAlign: 'middle' }} onClick={onZoom}>
         <Icon type="plus" />
         <br />
