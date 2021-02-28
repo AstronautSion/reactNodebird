@@ -1,27 +1,30 @@
 import React, { useEffect } from 'react';
-import PostForm from '../components/PostForm.js';
-import PostCard from '../components/PostCard.js';
-import { useDispatch, useSelector }  from 'react-redux';
-import { LOAD_MAIN_POSTS_REQUEST } from '../reducers/post.js';
+import { useSelector, useDispatch } from 'react-redux';
+import PostForm from '../components/PostForm';
+import PostCard from '../components/PostCard';
+import { LOAD_MAIN_POSTS_REQUEST } from '../reducers/post';
 
-const Home = () =>{
-    const { me } = useSelector(state => state.user);
-    const { mainPosts } = useSelector(state => state.post);
-    const dispatch = useDispatch();
+const Home = () => {
+  const { me } = useSelector(state => state.user);
+  const { mainPosts } = useSelector(state => state.post);
+  const dispatch = useDispatch();
 
-    useEffect(()=>{
-       dispatch({
-           type: LOAD_MAIN_POSTS_REQUEST,
-       });
-    },[])
-    return(
-        <>
-            {me && <PostForm />}
-            {mainPosts && mainPosts.map((c, i) =>{
-                return( <PostCard key={i} post={c} /> );
-            })}
-        </>
-    );
+  useEffect(() => {
+    dispatch({
+      type: LOAD_MAIN_POSTS_REQUEST,
+    });
+  }, []);
+
+  return (
+    <div>
+      {me && <PostForm />}
+      {mainPosts.map((c) => {
+        return (
+          <PostCard key={c} post={c} />
+        );
+      })}
+    </div>
+  );
 };
 
 export default Home;
