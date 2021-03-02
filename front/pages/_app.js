@@ -13,27 +13,24 @@ import reducer from '../reducers';
 import rootSaga from '../sagas';
 import { LOAD_USER_REQUEST } from '../reducers/user';
 
-const NodeBird = ({ Component, store, pageProps }) => {
-  console.log('pageProps', pageProps);
-  return (
-    <Provider store={store}>
-      <Head>
-        <title>NodeBird</title>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/antd/3.16.2/antd.css" />
-        <link rel="stylesheet" type="text/css" charSet="UTF-8" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick.min.css" />
-        <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick-theme.min.css" />
-      </Head>
-      <AppLayout>
-        <Component {...pageProps} />
-      </AppLayout>
-    </Provider>
-  );
-};
+const NodeBird = ({ Component, store, pageProps }) => (
+  <Provider store={store}>
+    <Head>
+      <title>NodeBird</title>
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/antd/3.16.2/antd.css" />
+      <link rel="stylesheet" type="text/css" charSet="UTF-8" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick.min.css" />
+      <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick-theme.min.css" />
+    </Head>
+    <AppLayout>
+      <Component {...pageProps} />
+    </AppLayout>
+  </Provider>
+);
 
 NodeBird.propTypes = {
   Component: PropTypes.elementType.isRequired,
   store: PropTypes.object.isRequired,
-  // pageProps: PropTypes.object.isRequired,
+  pageProps: PropTypes.object,
 };
 
 NodeBird.getInitialProps = async (context) => {

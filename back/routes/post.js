@@ -3,7 +3,7 @@ const multer = require('multer');
 const path = require('path');
 
 const db = require('../models');
-const { isLoggedIn } = require('./middleware');
+const { isLoggedIn, hasPostIn } = require('./middleware');
 
 const router = express.Router();
 
@@ -74,12 +74,22 @@ router.post('/images', upload.array('image'), (req, res) => {
   res.json(req.files.map(v => v.filename));
 });
 
+router.delete('/:id', isLoggedIn, async (req, res, next) => {
+  try {
+    const post = await db.Post.findOne({ where: {id: req.params.id } });
+    hasPostIn(post);
+    await db.Post.destroy({where: { id: req.params.id }})
+    res.send(req.params.id);
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
+
 router.get('/:id/comments', async (req, res, next) => {
   try {
     const post = await db.Post.findOne({ where: { id: req.params.id } });
-    if (!post) {
-      return res.status(404).send('포스트가 존재하지 않습니다.');
-    }
+    hasPostIn(post);
     const comments = await db.Comment.findAll({
       where: {
         PostId: req.params.id,
@@ -100,9 +110,7 @@ router.get('/:id/comments', async (req, res, next) => {
 router.post('/:id/comment', isLoggedIn, async (req, res, next) => { // POST /api/post/1000000/comment
   try {
     const post = await db.Post.findOne({ where: { id: req.params.id } });
-    if (!post) {
-      return res.status(404).send('포스트가 존재하지 않습니다.');
-    }
+    hasPostIn(post);
     const newComment = await db.Comment.create({
       PostId: post.id,
       UserId: req.user.id,
@@ -128,9 +136,7 @@ router.post('/:id/comment', isLoggedIn, async (req, res, next) => { // POST /api
 router.post('/:id/like', isLoggedIn, async (req, res, next) => {
   try {
     const post = await db.Post.findOne({ where: { id: req.params.id }});
-    if (!post) {
-      return res.status(404).send('포스트가 존재하지 않습니다.');
-    }
+    hasPostIn(post);
     await post.addLiker(req.user.id);
     res.json({ userId: req.user.id });
   } catch (e) {
@@ -142,9 +148,7 @@ router.post('/:id/like', isLoggedIn, async (req, res, next) => {
 router.delete('/:id/like', isLoggedIn, async (req, res, next) => {
   try {
     const post = await db.Post.findOne({ where: { id: req.params.id }});
-    if (!post) {
-      return res.status(404).send('포스트가 존재하지 않습니다.');
-    }
+    hasPostIn(post);
     await post.removeLiker(req.user.id);
     res.json({ userId: req.user.id });
   } catch (e) {
@@ -162,9 +166,7 @@ router.post('/:id/retweet', isLoggedIn, async (req, res, next) => {
         as: 'Retweet',
       }],
     });
-    if (!post) {
-      return res.status(404).send('포스트가 존재하지 않습니다.');
-    }
+    hasPostIn(post);
     if (req.user.id === post.UserId || (post.Retweet && post.Retweet.UserId === req.user.id)) {
       return res.status(403).send('자신의 글은 리트윗할 수 없습니다.');
     }

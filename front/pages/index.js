@@ -7,12 +7,11 @@ import { LOAD_MAIN_POSTS_REQUEST } from '../reducers/post';
 const Home = () => {
   const { me } = useSelector(state => state.user);
   const { mainPosts } = useSelector(state => state.post);
-  
   return (
     <div>
       {me && <PostForm />}
-      {mainPosts.map((c, i) => (
-          <PostCard key={i} post={c} />
+      {mainPosts.map(post => (
+        <PostCard key={post.id} post={post} />
       ))}
     </div>
   );

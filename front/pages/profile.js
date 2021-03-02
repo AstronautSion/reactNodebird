@@ -89,6 +89,5 @@ Profile.getInitialProps = (context) => {
     type: LOAD_USER_POSTS_REQUEST,
     data: state.user.me && state.user.me.id,
   });
-
-}
+};
 export default Profile;

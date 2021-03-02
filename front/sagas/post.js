@@ -1,4 +1,4 @@
-import { all, fork, takeLatest, put, delay, call } from 'redux-saga/effects';
+import { all, fork, takeLatest, put, call } from 'redux-saga/effects';
 import axios from 'axios';
 import {
   ADD_POST_FAILURE,
@@ -27,8 +27,11 @@ import {
   UPLOAD_IMAGES_FAILURE,
   UPLOAD_IMAGES_REQUEST,
   UPLOAD_IMAGES_SUCCESS,
+  REMOVE_POST_FAILURE,
+  REMOVE_POST_REQUEST,
+  REMOVE_POST_SUCCESS,
 } from '../reducers/post';
-import { ADD_POST_TO_ME } from '../reducers/user';
+import { ADD_POST_TO_ME, REMOVE_POST_OF_ME } from '../reducers/user';
 
 function addPostAPI(postData) {
   return axios.post('/post', postData, {
@@ -47,10 +50,10 @@ function* addPost(action) {
       type: ADD_POST_TO_ME,
       data: result.data.id,
     });
-  } catch (e) {
+  } catch (error) {
     yield put({
       type: ADD_POST_FAILURE,
-      error: e,
+      error,
     });
   }
 }
@@ -70,10 +73,10 @@ function* loadMainPosts() {
       type: LOAD_MAIN_POSTS_SUCCESS,
       data: result.data,
     });
-  } catch (e) {
+  } catch (error) {
     yield put({
       type: LOAD_MAIN_POSTS_FAILURE,
-      error: e,
+      error,
     });
   }
 }
@@ -93,10 +96,10 @@ function* loadHashtagPosts(action) {
       type: LOAD_HASHTAG_POSTS_SUCCESS,
       data: result.data,
     });
-  } catch (e) {
+  } catch (error) {
     yield put({
       type: LOAD_HASHTAG_POSTS_FAILURE,
-      error: e,
+      error,
     });
   }
 }
@@ -116,10 +119,10 @@ function* loadUserPosts(action) {
       type: LOAD_USER_POSTS_SUCCESS,
       data: result.data,
     });
-  } catch (e) {
+  } catch (error) {
     yield put({
       type: LOAD_USER_POSTS_FAILURE,
-      error: e,
+      error,
     });
   }
 }
@@ -144,11 +147,11 @@ function* addComment(action) {
         comment: result.data,
       },
     });
-  } catch (e) {
-    console.error(e);
+  } catch (error) {
+    console.error(error);
     yield put({
       type: ADD_COMMENT_FAILURE,
-      error: e,
+      error,
     });
   }
 }
@@ -171,11 +174,11 @@ function* loadComments(action) {
         comments: result.data,
       },
     });
-  } catch (e) {
-    console.error(e);
+  } catch (error) {
+    console.error(error);
     yield put({
       type: LOAD_COMMENTS_FAILURE,
-      error: e,
+      error,
     });
   }
 }
@@ -197,11 +200,11 @@ function* uploadImages(action) {
       type: UPLOAD_IMAGES_SUCCESS,
       data: result.data,
     });
-  } catch (e) {
-    console.error(e);
+  } catch (error) {
+    console.error(error);
     yield put({
       type: UPLOAD_IMAGES_FAILURE,
-      error: e,
+      error,
     });
   }
 }
@@ -226,11 +229,11 @@ function* likePost(action) {
         userId: result.data.userId,
       },
     });
-  } catch (e) {
-    console.error(e);
+  } catch (error) {
+    console.error(error);
     yield put({
       type: LIKE_POST_FAILURE,
-      error: e,
+      error,
     });
   }
 }
@@ -255,11 +258,11 @@ function* unlikePost(action) {
         userId: result.data.userId,
       },
     });
-  } catch (e) {
-    console.error(e);
+  } catch (error) {
+    console.error(error);
     yield put({
       type: UNLIKE_POST_FAILURE,
-      error: e,
+      error,
     });
   }
 }
@@ -281,18 +284,49 @@ function* retweet(action) {
       type: RETWEET_SUCCESS,
       data: result.data,
     });
-  } catch (e) {
-    console.error(e);
+  } catch (error) {
+    console.error(error);
     yield put({
       type: RETWEET_FAILURE,
-      error: e,
+      error,
     });
-    alert(e.response && e.response.data);
+    alert(error.response && error.response.data);
   }
 }
 
 function* watchRetweet() {
   yield takeLatest(RETWEET_REQUEST, retweet);
+}
+
+
+function removePostAPI(postId) {
+  return axios.delete(`/post/${postId}`, {
+    withCredentials: true,
+  });
+}
+
+function* removePost(action) {
+  try {
+    const result = yield call(removePostAPI, action.data);
+    yield put({
+      type: REMOVE_POST_SUCCESS,
+      data: result.data,
+    });
+    yield put({
+      type: REMOVE_POST_OF_ME,
+      data: result.data,
+    });
+  } catch (error) {
+    console.error(error);
+    yield put({
+      type: REMOVE_POST_FAILURE,
+      error,
+    });
+  }
+}
+
+function* watchRemovePost() {
+  yield takeLatest(REMOVE_POST_REQUEST, removePost);
 }
 
 export default function* postSaga() {
@@ -307,5 +341,6 @@ export default function* postSaga() {
     fork(watchLikePost),
     fork(watchUnlikePost),
     fork(watchRetweet),
+    fork(watchRemovePost),
   ]);
 }

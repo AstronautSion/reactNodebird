@@ -10,7 +10,7 @@ const TextInput = ({ value }) => (
 );
 
 TextInput.propTypes = {
-  value: PropTypes.string,
+  value: PropTypes.string.isRequired,
 };
 
 export const useInput = (initValue = null) => {
@@ -67,6 +67,10 @@ const Signup = () => {
     setTermError(false);
     setTerm(e.target.checked);
   }, []);
+
+  if (me) {
+    return null;
+  }
 
   return (
     <>

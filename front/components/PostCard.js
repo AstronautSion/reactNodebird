@@ -8,6 +8,7 @@ import {
   ADD_COMMENT_REQUEST,
   LIKE_POST_REQUEST,
   LOAD_COMMENTS_REQUEST,
+  REMOVE_POST_REQUEST,
   RETWEET_REQUEST,
   UNLIKE_POST_REQUEST,
 } from '../reducers/post';
@@ -56,6 +57,7 @@ const PostCard = ({ post }) => {
     setCommentText(e.target.value);
   }, []);
 
+  // eslint-disable-next-line consistent-return
   const onToggleLike = useCallback(() => {
     if (!me) {
       return alert('로그인이 필요합니다!');
@@ -97,6 +99,13 @@ const PostCard = ({ post }) => {
     });
   }, []);
 
+  const onRemovePost = useCallback(userId => () => {
+    dispatch({
+      type: REMOVE_POST_REQUEST,
+      data: userId,
+    });
+  }, []);
+
   return (
     <div>
       <Card
@@ -120,7 +129,7 @@ const PostCard = ({ post }) => {
                   ? (
                     <>
                       <Button>수정</Button>
-                      <Button type="danger">삭제</Button>
+                      <Button type="danger" onClick={onRemovePost(post.id)}>삭제</Button>
                     </>
                   )
                   : <Button>신고</Button>}
@@ -131,7 +140,12 @@ const PostCard = ({ post }) => {
           </Popover>,
         ]}
         title={post.RetweetId ? `${post.User.nickname}님이 리트윗하셨습니다.` : null}
-        extra={ !me || post.User.id === me.id ? null : me.Followings && me.Followings.find(v => v.id === post.User.id) ? <Button onClick={onUnfollow(post.User.id)}>언팔로우</Button> : <Button onClick={onFollow(post.User.id)}>팔로우</Button>}>
+        extra={!me || post.User.id === me.id
+          ? null
+          : me.Followings && me.Followings.find(v => v.id === post.User.id)
+            ? <Button onClick={onUnfollow(post.User.id)}>언팔로우</Button>
+            : <Button onClick={onFollow(post.User.id)}>팔로우</Button>}
+      >
         {post.RetweetId && post.Retweet
           ? (
             <Card

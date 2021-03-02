@@ -13,3 +13,9 @@ exports.isNotLoggedIn = (req, res, next) => {
     res.status(401).send('로그인한 사용자는 접근할 수 없습니다.');
   }
 };
+
+exports.hasPostIn = (post) => {
+  if (!post) {
+    res.status(404).send('포스트가 존재하지 않습니다.');
+  }
+}

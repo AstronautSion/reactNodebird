@@ -18,7 +18,7 @@ const PostImages = ({ images }) => {
   if (images.length === 1) {
     return (
       <>
-        <img src={imageUrl + images[0].src} onClick={onZoom} />
+        <img src={imageUrl + images[0].src} onClick={onZoom} alt={images[0].src} />
         {showImagesZoom && <ImagesZoom images={images} onClose={onClose} />}
       </>
     );
@@ -27,24 +27,24 @@ const PostImages = ({ images }) => {
     return (
       <>
         <div>
-          <img src={imageUrl + images[0].src} width="50%" onClick={onZoom} />
-          <img src={imageUrl + images[1].src} width="50%" onClick={onZoom} />
+          <img src={imageUrl + images[0].src} width="50%" onClick={onZoom} alt={images[0].src} />
+          <img src={imageUrl + images[1].src} width="50%" onClick={onZoom} alt={images[0].src} />
         </div>
         {showImagesZoom && <ImagesZoom images={images} onClose={onClose} />}
       </>
-  );
+    );
   }
   return (
     <>
-    <div>
-      <img src={imageUrl + images[0].src} width="50%" onClick={onZoom} />
-      <div style={{ display: 'inline-block', width: '50%', textAlign: 'center', verticalAlign: 'middle' }} onClick={onZoom}>
-        <Icon type="plus" />
-        <br />
-        {images.length - 1}
-        개의 사진 더보기
+      <div>
+        <img src={imageUrl + images[0].src} width="50%" onClick={onZoom} alt={images[0].src} />
+        <div style={{ display: 'inline-block', width: '50%', textAlign: 'center', verticalAlign: 'middle' }} onClick={onZoom}>
+          <Icon type="plus" />
+          <br />
+          {images.length - 1}
+          개의 사진 더보기
+        </div>
       </div>
-    </div>
       {showImagesZoom && <ImagesZoom images={images} onClose={onClose} />}
     </>
   );

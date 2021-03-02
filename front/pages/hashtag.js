@@ -5,7 +5,6 @@ import PostCard from '../components/PostCard';
 
 const Hashtag = () => {
   const { mainPosts } = useSelector(state => state.post);
- 
   return (
     <div>
       {mainPosts.map(c => (
