@@ -198,12 +198,14 @@ export default (state = initialState, action) => {
     case LOAD_FOLLOWERS_REQUEST: {
       return {
         ...state,
+        hasMoreFollower: action.offset ? state.hasMoreFollower : true,
       };
     }
     case LOAD_FOLLOWERS_SUCCESS: {
       return {
         ...state,
-        followerList: action.data,
+        followerList: state.followerList.concat(action.data),
+        hasMoreFollower: action.data.length === 3,
       };
     }
     case LOAD_FOLLOWERS_FAILURE: {
@@ -219,7 +221,7 @@ export default (state = initialState, action) => {
     case LOAD_FOLLOWINGS_SUCCESS: {
       return {
         ...state,
-        followingList: action.data,
+        followingList: state.followingList.concat(action.data),
       };
     }
     case LOAD_FOLLOWINGS_FAILURE: {
