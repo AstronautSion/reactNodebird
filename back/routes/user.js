@@ -27,7 +27,7 @@ router.post('/', async (req, res, next) => { // POST /api/user 회원가입
       userId: req.body.userId,
       password: hashedPassword,
     });
-    console.log(newUser);
+    // console.log(newUser);
     return res.status(200).json(newUser);
   } catch (e) {
     console.error(e);
@@ -103,7 +103,7 @@ router.post('/login', (req, res, next) => { // POST /api/user/login
           }],
           attributes: ['id', 'nickname', 'userId'],
         });
-        console.log(fullUser);
+        // console.log(fullUser);
         return res.json(fullUser);
       } catch (e) {
         next(e);

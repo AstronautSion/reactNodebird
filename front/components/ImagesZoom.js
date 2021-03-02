@@ -22,17 +22,15 @@ const ImagesZoom = ({ images, onClose }) => {
             slidesToShow={1}
             slidesToScroll={1}
           >
-            {images.map((v) => {
-              return (
-                <div style={{ padding: 32, textAlign: 'center' }}>
-                  <img src={`http://localhost:8088/images/${v.src}`} style={{ margin: '0 auto', maxHeight: 750 }} />
-                </div>
-              );
-            })}
+            {images.map(v => (
+              <div key={v.createdAt} style={{ padding: 32, textAlign: 'center' }}>
+                <img src={`http://localhost:8088/images/${v.src}`} style={{ margin: '0 auto', maxHeight: 750 }} />
+              </div>
+            ))}
           </Slick>
           <div style={{ textAlign: 'center' }}>
             <div style={{ width: 75, height: 30, lineHeight: '30px', borderRadius: 15, background: '#313131', display: 'inline-block', textAlign: 'center', color: 'white', fontSize: '15px' }}>
-              {currentSlide + 1} / {images.length}
+              {currentSlide + 1} / { images.length }
             </div>
           </div>
         </div>

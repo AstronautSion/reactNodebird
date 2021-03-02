@@ -30,7 +30,7 @@ const PostImages = ({ images }) => {
           <img src={imageUrl + images[0].src} width="50%" onClick={onZoom} />
           <img src={imageUrl + images[1].src} width="50%" onClick={onZoom} />
         </div>
-        {showImagesZoom && <ImagesZoom key={1} images={images} onClose={onClose} />}
+        {showImagesZoom && <ImagesZoom images={images} onClose={onClose} />}
       </>
   );
   }

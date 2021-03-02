@@ -32,7 +32,7 @@ router.post('/', isLoggedIn, upload.none(), async (req, res, next) => { // POST 
       const result = await Promise.all(hashtags.map(tag => db.Hashtag.findOrCreate({
         where: { name: tag.slice(1).toLowerCase() },
       })));
-      console.log(result);
+      // console.log(result);
       await newPost.addHashtags(result.map(r => r[0]));
     }
     if (req.body.image) { // 이미지 주소를 여러개 올리면 image: [주소1, 주소2]
@@ -70,7 +70,7 @@ router.post('/', isLoggedIn, upload.none(), async (req, res, next) => { // POST 
 });
 
 router.post('/images', upload.array('image'), (req, res) => {
-  console.log(req.files);
+  // console.log(req.files);
   res.json(req.files.map(v => v.filename));
 });
 
