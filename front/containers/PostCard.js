@@ -3,18 +3,22 @@ import { Avatar, Button, Card, Comment, Form, Icon, Input, List, Popover } from 
 import Link from 'next/link';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
+import styled from 'styled-components';
 
 import {
   ADD_COMMENT_REQUEST,
   LIKE_POST_REQUEST,
-  LOAD_COMMENTS_REQUEST,
-  REMOVE_POST_REQUEST,
+  LOAD_COMMENTS_REQUEST, REMOVE_POST_REQUEST,
   RETWEET_REQUEST,
   UNLIKE_POST_REQUEST,
 } from '../reducers/post';
-import PostImages from './PostImages';
-import PostCardContent from './PostCardContent';
+import PostImages from '../components/PostImages';
+import PostCardContent from '../components/PostCardContent';
 import { FOLLOW_USER_REQUEST, UNFOLLOW_USER_REQUEST } from '../reducers/user';
+
+const CardWrapper = styled.div`
+  margin-bottom: 20px;
+`;
 
 const PostCard = ({ post }) => {
   const [commentFormOpened, setCommentFormOpened] = useState(false);
@@ -57,7 +61,6 @@ const PostCard = ({ post }) => {
     setCommentText(e.target.value);
   }, []);
 
-  // eslint-disable-next-line consistent-return
   const onToggleLike = useCallback(() => {
     if (!me) {
       return alert('로그인이 필요합니다!');
@@ -104,12 +107,11 @@ const PostCard = ({ post }) => {
       type: REMOVE_POST_REQUEST,
       data: userId,
     });
-  }, []);
+  });
 
   return (
-    <div>
+    <CardWrapper>
       <Card
-        key={post.createdAt}
         cover={post.Images && post.Images[0] && <PostImages images={post.Images} />}
         actions={[
           <Icon type="retweet" key="retweet" onClick={onRetweet} />,
@@ -144,7 +146,8 @@ const PostCard = ({ post }) => {
           ? null
           : me.Followings && me.Followings.find(v => v.id === post.User.id)
             ? <Button onClick={onUnfollow(post.User.id)}>언팔로우</Button>
-            : <Button onClick={onFollow(post.User.id)}>팔로우</Button>}
+            : <Button onClick={onFollow(post.User.id)}>팔로우</Button>
+        }
       >
         {post.RetweetId && post.Retweet
           ? (
@@ -205,7 +208,7 @@ const PostCard = ({ post }) => {
           />
         </>
       )}
-    </div>
+    </CardWrapper>
   );
 };
 

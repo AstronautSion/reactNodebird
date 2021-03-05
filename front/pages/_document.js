@@ -7,7 +7,7 @@ import { ServerStyleSheet } from 'styled-components';
 class MyDocument extends Document {
   static getInitialProps(context) {
     const sheet = new ServerStyleSheet();
-    const page = context.renderPage(App => props => sheet.collectStyles(<App {...props} />));
+    const page = context.renderPage((App) => (props) => sheet.collectStyles(<App {...props} />));
     const styleTags = sheet.getStyleElement();
     return { ...page, helmet: Helmet.renderStatic(), styleTags };
   }
@@ -19,8 +19,8 @@ class MyDocument extends Document {
 
     return (
       <html {...htmlAttrs}>
-        {this.props.styleTags}
         <head>
+          {this.props.styleTags}
           {Object.values(helmet).map(el => el.toComponent())}
         </head>
         <body {...bodyAttrs}>
@@ -34,6 +34,7 @@ class MyDocument extends Document {
 
 MyDocument.propTypes = {
   helmet: PropTypes.object.isRequired,
+  styleTags: PropTypes.object.isRequired,
 };
 
 export default MyDocument;

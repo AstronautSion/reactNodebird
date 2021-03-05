@@ -13,6 +13,8 @@ export const initialState = {
   userInfo: null, // 남의 정보
   isEditingNickname: false, // 이름 변경 중
   editNicknameErrorReason: '', // 이름 변경 실패 사유
+  hasMoreFollower: false,
+  hasMoreFollowing: false,
 };
 
 export const SIGN_UP_REQUEST = 'SIGN_UP_REQUEST';
@@ -68,13 +70,13 @@ export default (state = initialState, action) => {
       }
       case LOG_IN_SUCCESS: {
         draft.isLoggingIn = false;
+        draft.logInErrorReason = '';
         draft.me = action.data;
-        draft.isLoading = false;
         break;
       }
       case LOG_IN_FAILURE: {
         draft.isLoggingIn = false;
-        draft.logInErrorReason = action.error;
+        draft.logInErrorReason = action.reason;
         draft.me = null;
         break;
       }
@@ -88,8 +90,8 @@ export default (state = initialState, action) => {
         break;
       }
       case SIGN_UP_REQUEST: {
-        draft.isSigningUp = true;
         draft.isSignedUp = false;
+        draft.isSigningUp = true;
         draft.signUpErrorReason = '';
         break;
       }
@@ -111,7 +113,7 @@ export default (state = initialState, action) => {
           draft.me = action.data;
           break;
         }
-        draft.userInfo = action.data;
+        draft.useInfo = action.data;
         break;
       }
       case LOAD_USER_FAILURE: {
@@ -138,9 +140,7 @@ export default (state = initialState, action) => {
         break;
       }
       case UNFOLLOW_USER_FAILURE: {
-        return {
-          ...state,
-        };
+        break;
       }
       case ADD_POST_TO_ME: {
         draft.me.Posts.unshift({ id: action.data });
@@ -153,7 +153,7 @@ export default (state = initialState, action) => {
       }
       case LOAD_FOLLOWERS_REQUEST: {
         draft.followerList = !action.offset ? [] : draft.followerList;
-        draft.hasMoreFollower = action.offset ? draft.hasMoreFollower : true;
+        draft.hasMoreFollower = action.offset ? draft.hasMoreFollower : true; // 처음 데이터를 가져올 때는 더보기 버튼을 보여주는 걸로
         break;
       }
       case LOAD_FOLLOWERS_SUCCESS: {

@@ -1,4 +1,4 @@
-import { all, fork, takeLatest, put, call, throttle } from 'redux-saga/effects';
+import { all, fork, takeLatest, put, throttle, call } from 'redux-saga/effects';
 import axios from 'axios';
 import {
   ADD_POST_FAILURE,
@@ -21,15 +21,19 @@ import {
   LOAD_MAIN_POSTS_SUCCESS,
   LOAD_USER_POSTS_FAILURE,
   LOAD_USER_POSTS_REQUEST,
-  LOAD_USER_POSTS_SUCCESS, RETWEET_FAILURE, RETWEET_REQUEST, RETWEET_SUCCESS,
-  UNLIKE_POST_FAILURE, UNLIKE_POST_REQUEST,
-  UNLIKE_POST_SUCCESS,
-  UPLOAD_IMAGES_FAILURE,
-  UPLOAD_IMAGES_REQUEST,
-  UPLOAD_IMAGES_SUCCESS,
+  LOAD_USER_POSTS_SUCCESS,
   REMOVE_POST_FAILURE,
   REMOVE_POST_REQUEST,
   REMOVE_POST_SUCCESS,
+  RETWEET_FAILURE,
+  RETWEET_REQUEST,
+  RETWEET_SUCCESS,
+  UNLIKE_POST_FAILURE,
+  UNLIKE_POST_REQUEST,
+  UNLIKE_POST_SUCCESS,
+  UPLOAD_IMAGES_FAILURE,
+  UPLOAD_IMAGES_REQUEST,
+  UPLOAD_IMAGES_SUCCESS, LOAD_POST_SUCCESS, LOAD_POST_FAILURE, LOAD_POST_REQUEST,
 } from '../reducers/post';
 import { ADD_POST_TO_ME, REMOVE_POST_OF_ME } from '../reducers/user';
 
@@ -50,10 +54,10 @@ function* addPost(action) {
       type: ADD_POST_TO_ME,
       data: result.data.id,
     });
-  } catch (error) {
+  } catch (e) {
     yield put({
       type: ADD_POST_FAILURE,
-      error,
+      error: e,
     });
   }
 }
@@ -62,8 +66,8 @@ function* watchAddPost() {
   yield takeLatest(ADD_POST_REQUEST, addPost);
 }
 
-function loadMainPostsAPI(offset = 0) {
-  return axios.get(`/posts?offset=${offset}&limit=10`);
+function loadMainPostsAPI(lastId = 0, limit = 10) {
+  return axios.get(`/posts?lastId=${lastId}&limit=${limit}`);
 }
 
 function* loadMainPosts(action) {
@@ -73,10 +77,10 @@ function* loadMainPosts(action) {
       type: LOAD_MAIN_POSTS_SUCCESS,
       data: result.data,
     });
-  } catch (error) {
+  } catch (e) {
     yield put({
       type: LOAD_MAIN_POSTS_FAILURE,
-      error,
+      error: e,
     });
   }
 }
@@ -85,8 +89,8 @@ function* watchLoadMainPosts() {
   yield throttle(2000, LOAD_MAIN_POSTS_REQUEST, loadMainPosts);
 }
 
-function loadHashtagPostsAPI(tag, offset = 0, limit = 0) {
-  return axios.get(`/hashtag/${encodeURIComponent(tag)}?offset=${offset}&limit=${limit}`);
+function loadHashtagPostsAPI(tag, lastId) {
+  return axios.get(`/hashtag/${encodeURIComponent(tag)}?lastId=${lastId}&limit=10`);
 }
 
 function* loadHashtagPosts(action) {
@@ -96,10 +100,10 @@ function* loadHashtagPosts(action) {
       type: LOAD_HASHTAG_POSTS_SUCCESS,
       data: result.data,
     });
-  } catch (error) {
+  } catch (e) {
     yield put({
       type: LOAD_HASHTAG_POSTS_FAILURE,
-      error,
+      error: e,
     });
   }
 }
@@ -119,10 +123,10 @@ function* loadUserPosts(action) {
       type: LOAD_USER_POSTS_SUCCESS,
       data: result.data,
     });
-  } catch (error) {
+  } catch (e) {
     yield put({
       type: LOAD_USER_POSTS_FAILURE,
-      error,
+      error: e,
     });
   }
 }
@@ -147,11 +151,11 @@ function* addComment(action) {
         comment: result.data,
       },
     });
-  } catch (error) {
-    console.error(error);
+  } catch (e) {
+    console.error(e);
     yield put({
       type: ADD_COMMENT_FAILURE,
-      error,
+      error: e,
     });
   }
 }
@@ -174,11 +178,11 @@ function* loadComments(action) {
         comments: result.data,
       },
     });
-  } catch (error) {
-    console.error(error);
+  } catch (e) {
+    console.error(e);
     yield put({
       type: LOAD_COMMENTS_FAILURE,
-      error,
+      error: e,
     });
   }
 }
@@ -200,11 +204,11 @@ function* uploadImages(action) {
       type: UPLOAD_IMAGES_SUCCESS,
       data: result.data,
     });
-  } catch (error) {
-    console.error(error);
+  } catch (e) {
+    console.error(e);
     yield put({
       type: UPLOAD_IMAGES_FAILURE,
-      error,
+      error: e,
     });
   }
 }
@@ -229,11 +233,11 @@ function* likePost(action) {
         userId: result.data.userId,
       },
     });
-  } catch (error) {
-    console.error(error);
+  } catch (e) {
+    console.error(e);
     yield put({
       type: LIKE_POST_FAILURE,
-      error,
+      error: e,
     });
   }
 }
@@ -258,11 +262,11 @@ function* unlikePost(action) {
         userId: result.data.userId,
       },
     });
-  } catch (error) {
-    console.error(error);
+  } catch (e) {
+    console.error(e);
     yield put({
       type: UNLIKE_POST_FAILURE,
-      error,
+      error: e,
     });
   }
 }
@@ -284,20 +288,19 @@ function* retweet(action) {
       type: RETWEET_SUCCESS,
       data: result.data,
     });
-  } catch (error) {
-    console.error(error);
+  } catch (e) {
+    console.error(e);
     yield put({
       type: RETWEET_FAILURE,
-      error,
+      error: e,
     });
-    alert(error.response && error.response.data);
+    alert(e.response && e.response.data);
   }
 }
 
 function* watchRetweet() {
   yield takeLatest(RETWEET_REQUEST, retweet);
 }
-
 
 function removePostAPI(postId) {
   return axios.delete(`/post/${postId}`, {
@@ -316,17 +319,41 @@ function* removePost(action) {
       type: REMOVE_POST_OF_ME,
       data: result.data,
     });
-  } catch (error) {
-    console.error(error);
+  } catch (e) {
+    console.error(e);
     yield put({
       type: REMOVE_POST_FAILURE,
-      error,
+      error: e,
     });
   }
 }
 
 function* watchRemovePost() {
   yield takeLatest(REMOVE_POST_REQUEST, removePost);
+}
+
+function loadPostAPI(postId) {
+  return axios.get(`/post/${postId}`);
+}
+
+function* loadPost(action) {
+  try {
+    const result = yield call(loadPostAPI, action.data);
+    yield put({
+      type: LOAD_POST_SUCCESS,
+      data: result.data,
+    });
+  } catch (e) {
+    console.error(e);
+    yield put({
+      type: LOAD_POST_FAILURE,
+      error: e,
+    });
+  }
+}
+
+function* watchLoadPost() {
+  yield takeLatest(LOAD_POST_REQUEST, loadPost);
 }
 
 export default function* postSaga() {
@@ -342,5 +369,6 @@ export default function* postSaga() {
     fork(watchUnlikePost),
     fork(watchRetweet),
     fork(watchRemovePost),
+    fork(watchLoadPost),
   ]);
 }

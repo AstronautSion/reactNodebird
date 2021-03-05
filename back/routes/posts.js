@@ -6,12 +6,12 @@ const router = express.Router();
 router.get('/', async (req, res, next) => { // GET /api/posts
   try {
     let where = {};
-    if( parseInt(req.query.offset, 10)){
+    if (parseInt(req.query.lastId, 10)) {
       where = {
         id: {
-          [db.Sequelize.Op.lt]: parseInt(req.query.offset, 10),  
-        }
-      }
+          [db.Sequelize.Op.lt]: parseInt(req.query.lastId, 10), // less than
+        },
+      };
     }
     const posts = await db.Post.findAll({
       where,

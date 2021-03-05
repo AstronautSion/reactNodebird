@@ -27,7 +27,7 @@ router.post('/', async (req, res, next) => { // POST /api/user 회원가입
       userId: req.body.userId,
       password: hashedPassword,
     });
-    // console.log(newUser);
+    console.log(newUser);
     return res.status(200).json(newUser);
   } catch (e) {
     console.error(e);
@@ -103,7 +103,7 @@ router.post('/login', (req, res, next) => { // POST /api/user/login
           }],
           attributes: ['id', 'nickname', 'userId'],
         });
-        // console.log(fullUser);
+        console.log(fullUser);
         return res.json(fullUser);
       } catch (e) {
         next(e);
@@ -133,7 +133,7 @@ router.get('/:id/followers', isLoggedIn, async (req, res, next) => { // /api/use
   try {
     const user = await db.User.findOne({
       where: { id: parseInt(req.params.id, 10) || (req.user && req.user.id) || 0 },
-    });
+    }); // req.params.id가 문자열 '0'
     const followers = await user.getFollowers({
       attributes: ['id', 'nickname'],
       limit: parseInt(req.query.limit, 10),
