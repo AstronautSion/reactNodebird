@@ -21,17 +21,17 @@ const UserProfile = () => {
           <a>
             <div>짹짹<br />{me.Posts.length}</div>
           </a>
-        </Link>,
+        </Link>
         <Link href="/profile" key="following" prefetch>
           <a>
             <div>팔로잉<br />{me.Followings.length}</div>
           </a>
-        </Link>,
+        </Link>
         <Link href="/profile" key="follower" prefetch>
           <a>
             <div>팔로워<br />{me.Followers.length}</div>
           </a>
-        </Link>,
+        </Link>
       ]}
     >
       <Card.Meta
